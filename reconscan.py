@@ -64,7 +64,7 @@ def httpsEnum(ip_address, port, folder):
 def mssqlEnum(ip_address, port, folder):
 	print "INFO: Detected MS-SQL on " + ip_address + ":" + port
 	print "INFO: Performing nmap mssql script scan for " + ip_address + ":" + port    
-	MSSQLSCAN = "nmap -vv -sV -Pn -p %s --script=ms-sql-info,ms-sql-config,ms-sql-dump-hashes --script-args=mssql.instance-port=1433,smsql.username-sa,mssql.password-sa -oX results/exam/nmap/%s_mssql.xml %s" % (port, ip_address, ip_address)
+	MSSQLSCAN = "nmap -vv -sV -Pn -p {port} --script=ms-sql-info,ms-sql-config,ms-sql-dump-hashes --script-args=mssql.instance-port=1433,smsql.username-sa,mssql.password-sa -oX {folder}{ip_address}_mssql.xml %s".format(port = port, ip_address = ip_address, folder = folder)
 	results = subprocess.check_output(MSSQLSCAN, shell=True)
 
 def sshEnum(ip_address, port, folder):
@@ -111,8 +111,8 @@ def nmapScan(ip_address):
 
 	print "INFO: Running general TCP/UDP nmap scans for " + ip_address
 	serv_dict = {}
-	TCPSCAN = "nmap -vv -Pn -A -sC -sS -T 4 --top-ports 50 -oN '{folder}{ip_address}.nmap' -oX '{folder}{ip_address}_nmap_scan_import.xml' {ip_address}" .format(folder = folder, ip_address = ip_address)
-	UDPSCAN = "nmap -vv -Pn -A -sC -sU -T 4 --top-ports 20 -oN '{folder}{ip_address}U.nmap' -oX '{folder}{ip_address}U_nmap_scan_import.xml' {ip_address}".format(folder = folder, ip_address = ip_address)
+	TCPSCAN = "nmap -vv -Pn -A -sC -sS -T 4 -p- -oN '{folder}{ip_address}.nmap' -oX '{folder}{ip_address}_nmap_scan_import.xml' {ip_address}" .format(folder = folder, ip_address = ip_address)
+	UDPSCAN = "nmap -vv -Pn -A -sC -sU -T 4 --top-ports 200 -oN '{folder}{ip_address}U.nmap' -oX '{folder}{ip_address}U_nmap_scan_import.xml' {ip_address}".format(folder = folder, ip_address = ip_address)
 	results = subprocess.check_output(TCPSCAN, shell=True)
 	udpresults = subprocess.check_output(UDPSCAN, shell=True)
 	lines = results.split("\n")
